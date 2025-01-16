@@ -1,0 +1,515 @@
+DEFINE
+    MEASURE 'dCanal_de vendas'[Fat R$ Display] = VAR Fat = [FatR$]
+return if(ISBLANK(Fat) ,"",Fat)
+    MEASURE 'Medidas_Fat'[FatR$] = SUM(
+    fConsolidado_Faturamento[FAT LIQUIDO])
+    MEASURE 'Medidas_Fat'[LY] = CALCULATE(
+    Medidas_Fat[FatR$], SAMEPERIODLASTYEAR(Calendario[Data]))
+    MEASURE 'Medidas_Fat'[YoY] = VAR varENTRADA = [LY]
+VAR varResultado = 
+DIVIDE(
+    Medidas_Fat[FatR$]- varENTRADA, varENTRADA)
+VAR varFormato = FORMAT(varResultado, "#%")
+    RETURN
+    IF(varResultado = BLANK(), "🟢"&varFormato, IF(varResultado > 0, "🟢"&varFormato, "🔴"&varFormato))
+    MEASURE 'Medidas_Fat'[M-LY] = CALCULATE(
+[FatR$],
+    DATEADD(Calendario[Data],
+    -1,
+    YEAR
+    )
+)
+    MEASURE 'Medidas_Fat'[M-1] = CALCULATE(
+[FatR$],
+    DATEADD(Calendario[Data],
+    -1,
+    MONTH
+    ))
+    MEASURE 'Medidas_Fat'[Meta R$] = CALCULATE(SUM(Meta[Valor]), Meta[TipoMeta] = "Financeira")
+    MEASURE 'Medidas_Fat'[% Aderencia] = DIVIDE(Medidas_Fat[FatR$], [Meta R$])
+    MEASURE 'Medidas_Fat'[% M-1] = VAR  Divisao = DIVIDE([FatR$],[M-1])-1
+RETURN
+IF(Divisao = -1, BLANK(), Divisao)
+    MEASURE 'Medidas_Fat'[% M-LY] = VAR  Divisao = DIVIDE([FatR$],[M-LY])-1
+RETURN
+IF(Divisao = -1, BLANK(), Divisao)
+    MEASURE 'Medidas_Fat'[Qt Fat] = SUM(fConsolidado_Faturamento[QuantidadeLiquida])
+    MEASURE 'Medidas_Fat'[Meta Vol] = CALCULATE(SUM(Meta[Valor]), Meta[TipoMeta] = "Vol")
+    MEASURE 'Medidas_Fat'[Qt M-LY] = CALCULATE(
+[Qt Fat],
+    DATEADD(Calendario[Data],
+    -1,
+    YEAR
+    )
+)
+    MEASURE 'Medidas_Fat'[Qt M-1] = CALCULATE(
+[Qt Fat],
+    DATEADD(Calendario[Data],
+    -1,
+    MONTH
+    ))
+    MEASURE 'Medidas_Fat'[%Qt] = DIVIDE([Qt Fat],[Meta Vol])
+    MEASURE 'Medidas_Fat'[% M-1 qt] = VAR  Divisao = DIVIDE([Qt Fat],[Qt M-1])-1
+RETURN
+IF(Divisao = -1, BLANK(), Divisao)
+    MEASURE 'Medidas_Fat'[% M-LY qt] = VAR  Divisao = DIVIDE([Qt Fat],[Meta Vol])-1
+RETURN
+IF(Divisao = -1, BLANK(), Divisao)
+    MEASURE 'Medidas_Fat'[Em Aberto M-1 R$] = CALCULATE([Carteira Aberta] ,all(Calendario), fMonitorPedido[DataImplant] <=  EOMONTH( max(Calendario[Data]) ,-1) )
+    MEASURE 'Medidas_Fat'[Variação Faturamento] = VAR  Divisao = DIVIDE([FatR$],[LY])-1
+RETURN
+IF(Divisao = -1, BLANK(), Divisao)
+    MEASURE 'Medidas_Fat'[%MoM] = VAR varfattMoM = [M-1]
+VAR varResultado = 
+DIVIDE([FatR$] - varfattMoM, varfattMoM)
+     
+     RETURN
+          varResultado
+    MEASURE 'Medidas_Fat'[Detalhe MoM %] = FORMAT(
+    [%MoM], "⇡ 0%;  ⇣ 0%")
+    MEASURE 'Medidas_Fat'[%YoY] = VAR varFatYoY = [LY]
+VAR varResultado = 
+DIVIDE([FatR$] - varFatYoY, varFatYoY)
+     
+     RETURN
+          varResultado
+    MEASURE 'Medidas_Fat'[Detalhe YoY %] = FORMAT(
+    [%YoY], "⇡ 0%;  ⇣ 0%")
+    MEASURE 'Medidas_Fat'[Em Aberto qt M-1] = CALCULATE([Qt Cart] ,all(Calendario), fMonitorPedido[DataImplant] <=  EOMONTH( max(Calendario[Data]) ,-1) )
+    MEASURE 'Medidas_Fat'[Fatmes] = CALCULATE(Medidas_Fat[FatR$], FILTER(Calendario, Calendario[Mês] = 8))
+    MEASURE 'Medidas_Fat'[Meta faseamento] = 0.40
+    MEASURE 'Medidas_Fat'[Fat faseamento] = CALCULATE([FatR$], DATESBETWEEN(Calendario[Data], DATE(2024,08,01), DATE(2024,08,15)))
+    MEASURE 'Medidas_Fat'[%Faseamento] = DIVIDE([FatR$], [Meta R$])
+    MEASURE 'Medidas_Fat'[%Estrategicob] = DIVIDE([Qt Fat], [Meta Estrat])
+    MEASURE 'Medidas_Fat'[Meta Estrat] = CALCULATE(SUM(Meta[Valor]), Meta[TipoMeta] = "ESTRATEGICO")
+    MEASURE 'Medidas_Fat'[FAT D-1] = CALCULATE(
+[FatR$],
+    MAX(Calendario[Mês 1], -2))
+    MEASURE 'Medidas_Fat'[Fat Acumulado] = CALCULATE([FatR$], 
+    FILTER(ALLSELECTED(Calendario), 
+       Calendario[Data]<= MAX(Calendario[Data])
+  )
+)
+    MEASURE 'Medidas_Cart'[Carteira Aberta] = SUM(fMonitorPedido[Vl Líq Aberto])
+    MEASURE 'Medidas_Cart'[Entrada Carteira] = SUM(fMonitorPedido[Vl Líquido])
+    MEASURE 'Medidas_Cart'[Fat+Cart] = [FatR$]+[Total Aberto]
+    MEASURE 'Medidas_Cart'[%Fat+Cart] = DIVIDE([Fat+Cart],[Meta R$])
+    MEASURE 'Medidas_Cart'[Qt Cart] = CALCULATE(SUM(fMonitorPedido[QtdAberta]))
+    MEASURE 'Medidas_Cart'[Qt Cart+Fat] = [Total Abertoqt]+[Qt Fat]
+    MEASURE 'Medidas_Cart'[%Fat+Cartqt] = DIVIDE([Qt Cart+Fat],[Meta Vol])
+    MEASURE 'Medidas_Cart'[Gap] = IF(
+    [Fat+Cart]-[Meta R$]>0, "", [Meta R$]-[Fat+Cart])
+    MEASURE 'Medidas_Cart'[Total Aberto] = VAR varSum = [Carteira Aberta] + [Em Aberto M-1 R$]
+ RETURN
+ IF(varSum = BLANK(), 0, varSum)
+    MEASURE 'Medidas_Cart'[CART %MoM] = VAR varfattMoM = [M-1]
+VAR varResultado = 
+DIVIDE([FatR$] - varfattMoM, varfattMoM)
+     
+     RETURN
+          varResultado
+    MEASURE 'Medidas_Cart'[C Detalhe MoM %] = FORMAT(
+    Medidas_Cart[CART %MoM], "⇡ 0%;  ⇣ 0%")
+    MEASURE 'Medidas_Cart'[Total Abertoqt] = Medidas_Cart[Qt Cart] + [Em Aberto qt M-1]
+    MEASURE 'Medidas_Cart'[Qt Cancelada] = SUM(fMonitorPedido[QtdCancelada])
+    MEASURE 'Medidas_Cart'[Qt pedidos abertos] = CALCULATE(DISTINCTCOUNT(fMonitorPedido[NumeroPedido]), 
+fMonitorPedido[QtdAberta] > 0)
+    MEASURE 'Medidas_Cart'[Cart.Aberto Ton] = VAR varpeso = SUM(fMonitorPedido[PesoLiqAberto])
+RETURN  
+varpeso/1000
+    MEASURE 'Medidas_Cart'[Cartab.ton M-1] = CALCULATE(Medidas_Cart[Cart.Aberto Ton] ,all(Calendario), fMonitorPedido[DataImplant] <=  EOMONTH( max(Calendario[Data]) ,-1) )
+    MEASURE 'Medidas_Cart'[Cart Ton] = Medidas_Cart[Cartab.ton M-1]+Medidas_Cart[Cart.Aberto Ton]
+    MEASURE 'Medidas_Cart'[Fat+CartTon] = Medidas_Cart[Cart Ton]+Medidas_Ton[Qt Ton]
+    MEASURE 'Medidas_Cart'[%Fat+Cartton] = DIVIDE([Fat+CartTon],[Meta Ton])
+    MEASURE 'Medidas_Cart'[GapTon] = IF(
+    [Fat+CartTon]-[Meta Ton]>0, "", [Meta Ton]-[Fat+CartTon])
+    MEASURE 'Medidas_Cart'[Entrad qtd] = SUM(fMonitorPedido[QtdPedida])
+    MEASURE 'Medidas_Cart'[RankingCartQt] = RANKX(ALL(dProduto), [Total Abertoqt])
+    MEASURE 'Medidas_Cart'[RankingCartR$] = RANKX(ALL(dProduto), [Total Aberto])
+    MEASURE 'Medidas_Cart'[Valor Cancelado] = VAR varCancelado = SUM(fMonitorPedido[Valor Cancelado])
+RETURN
+IF(varCancelado = BLANK(), 0, varCancelado)
+    MEASURE 'Medidas_Cart'[%Cancelamento] = VAR varDivide = DIVIDE([Valor Cancelado], [Fatmes])
+RETURN
+IF(varDivide = 0, BLANK(), varDivide)
+    MEASURE 'Medidas_Cart'[Totalaberto abs] = VAR varCart = [Total Aberto]
+VAR varCartabs = CALCULATE([Total Aberto], ALLSELECTED(fMonitorPedido))
+RETURN
+DIVIDE(varCart, varCartabs)
+    MEASURE 'Medidas_Cart'[%Fat+Cartqtest] = DIVIDE([Qt Cart+Fat],[Meta Estrat])
+    MEASURE 'Medidas_Cart'[Valor CanceladoGrafico] = SUM(fMonitorPedido[Valor Cancelado])
+    MEASURE 'Medidas_Cart'[D-1] = VAR vDataContexto = MAX(Calendario[Data])
+VAR vUltimaDataFato = CALCULATE(
+    MAX(fConsolidado_Faturamento[DataFaturamento]), 
+    Calendario[Data] < vDataContexto)
+
+    VAR vValorUltimaData =
+    CALCULATE(
+        [FatR$],
+        Calendario[Data] = vUltimaDataFato
+    )
+    RETURN
+    vValorUltimaData
+    MEASURE 'Medidas_Cart'[ENTRADA D-1] = VAR vDataContexto = MAX(Calendario[Data])
+VAR vUltimaDataFato = CALCULATE(
+    MAX(fMonitorPedido[DataImplant]), 
+    Calendario[Data] < vDataContexto)
+
+    VAR vValorUltimaData =
+    CALCULATE(
+        [Entrada Carteira],
+        Calendario[Data] = vUltimaDataFato
+    )
+    RETURN
+    vValorUltimaData
+    MEASURE 'Medidas_Cart'[DEVOLUÇÃO] = SUM(fConsolidado_Faturamento[ValorDevolvido])*-1
+    MEASURE 'Medidas_Posit'[posit2] = CALCULATE(DISTINCTCOUNT(dClientes[Emitenteid]), FILTER(dClientes,[Qt Fat] > 0))
+    MEASURE 'Medidas_Posit'[posit2cart] = CALCULATE(DISTINCTCOUNT(dClientes[Emitenteid]), 
+                   FILTER(dClientes, 
+                   Medidas_Posit[posit2] = 0 && [Total Abertoqt] > 0)
+)
+    MEASURE 'Medidas_Posit'[Meta Posit] = CALCULATE(SUM(Meta[Valor]), Meta[TipoMeta] = "POSITIVACAO")
+    MEASURE 'Medidas_Posit'[Asa] = CALCULATE(Medidas_Posit[posit2], dUnidade[subEmpresaid]= 3)
+    MEASURE 'Medidas_Posit'[Hig] = CALCULATE(Medidas_Posit[posit2], dUnidade[subEmpresaid] = 4)
+    MEASURE 'Medidas_Posit'[Pal] = CALCULATE(Medidas_Posit[posit2], dUnidade[subEmpresaid]= 5)
+    MEASURE 'Medidas_Posit'[Vit] = CALCULATE(Medidas_Posit[posit2], dUnidade[subEmpresaid]= 6)
+    MEASURE 'Medidas_Posit'[% Aderencia.posit] = DIVIDE(Medidas_Posit[posit2], [Meta Posit])
+    MEASURE 'Medidas_Posit'[FAT+CARTPOSIT] = Medidas_Posit[posit2]+Medidas_Posit[posit2cart]
+    MEASURE 'Medidas_Posit'[Gapposit] = IF(
+    [FAT+CARTPOSIT]-[Meta Posit]>0, "", [Meta Posit]-[FAT+CARTPOSIT])
+    MEASURE 'Medidas_Posit'[Posit travado] = CALCULATE(Medidas_Posit[posit2], 
+       ALL(Estrategico), ALL(dProduto))
+    MEASURE 'Medidas_Posit'[%Posit Estrategico] = DIVIDE(Medidas_Posit[posit2], Medidas_Posit[Posit travado])
+    MEASURE 'Medidas_Posit'[Qt Atingida] = VAR varTabelax = SUMMARIZE(Estrategico,
+Estrategico[Caracteristicaestrategico],
+"Metricax", SUM(fConsolidado_Faturamento[QuantidadeLiquida]),
+"Metricay", CALCULATE(SUM(Meta[Valor]), Meta[TipoMeta] = "ESTRATEGICO")
+)
+RETURN
+SUMX(varTabelax, IF(DIVIDE([Metricax], [Metricay]) > 1,1,0))
+    MEASURE 'Medidas_Posit'[Media posit] = VAR varTabelax = 
+FILTER(SUMMARIZE(Estrategico,
+Estrategico[Caracteristicaestrategico],
+
+"Metricax", DIVIDE(Medidas_Posit[posit2],
+
+        Medidas_Posit[Posit travado]),
+
+        "LINHA", DISTINCTCOUNT(Estrategico[Caracteristicaestrategico])),
+        
+        NOT(ISBLANK([Metricax])))
+        
+        RETURN
+
+        AVERAGEX(varTabelax, DIVIDE([Metricax], [LINHA]))
+    MEASURE 'Medidas_YTG'[Fat 2022] = CALCULATE([FatR$], Calendario[Ano] = "2022")
+    MEASURE 'Medidas_YTG'[Fat 2023] = CALCULATE([FatR$], Calendario[Ano] = "2023")
+    MEASURE 'Medidas_YTG'[23vs22] = VAR  Divisao = DIVIDE([Fat 2023],[Fat 2022])-1
+RETURN
+IF(Divisao = -1, BLANK(), Divisao)
+    MEASURE 'Medidas_YTG'[YTD 2023] = VAR startyear =
+    STARTOFYEAR(Calendario[Data])-365
+VAR enddate =
+    LASTDATE(fConsolidado_Faturamento[DataFaturamento])-365
+RETURN
+    CALCULATE (
+        SUM (fConsolidado_Faturamento[FAT LIQUIDO]),
+        DATESBETWEEN (Calendario[Data], startyear, enddate)
+)
+    MEASURE 'Medidas_YTG'[24vs23] = VAR  Divisao = DIVIDE([FatR$],[YTD 2023])-1
+RETURN
+IF(Divisao = -1, BLANK(), Divisao)
+    MEASURE 'Medidas_YTG'[YTG] = ([FatR$]/6)*6*(1+'Parâmetro'[Valor Parâmetro])
+    MEASURE 'Medidas_YTG'[MEDIA YTG] = ([YTG]/6)*(1+'Parâmetro'[Valor Parâmetro])
+    MEASURE 'Medidas_YTG'[FY] = [YTG]+[FatR$]
+    MEASURE 'Medidas_YTG'[FYvs2023] = VAR  Divisao = DIVIDE([FY],[Fat 2023])-1
+RETURN
+IF(Divisao = -1, BLANK(), Divisao)
+    MEASURE 'Medidas_YTG'[GAPYTG] = [FY]-[FatR$]
+    MEASURE 'Medidas_YTG'[FYT] = [YTGT]+[Qt Ton]
+    MEASURE 'Medidas_YTG'[Faturamento YTD] = CALCULATE([FatR$],
+                    DATESYTD(Calendario[Data]))
+    MEASURE 'Medidas_YTG'[24vs23.2] = VAR  Divisao = DIVIDE([Faturamento YTD],[YTD 2023])-1
+RETURN
+IF(Divisao = -1, BLANK(), Divisao)
+    MEASURE 'Medidas_YTG'[YoY-YTD] = VAR varENTRADA = [YTD 2023]
+VAR varResultado = 
+DIVIDE(
+    [Faturamento YTD]- varENTRADA, varENTRADA)
+VAR varFormato = FORMAT(varResultado, "#%")
+    RETURN
+    IF(varResultado = BLANK(), "🟢"&varFormato, IF(varResultado > 0, "🟢"&varFormato, "🔴"&varFormato))
+    MEASURE 'Parâmetro'[Valor Parâmetro] = SELECTEDVALUE('Parâmetro'[Parâmetro])
+    MEASURE 'Medidas_Ton'[Qt Ton] = VAR varTON = SUM(fConsolidado_Faturamento[Peso])
+RETURN
+varTON/1000
+    MEASURE 'Medidas_Ton'[Ton2022] = CALCULATE([Qt Ton], Calendario[Ano] = "2022")
+    MEASURE 'Medidas_Ton'[Ton2023] = CALCULATE([Qt Ton], Calendario[Ano] = "2023")
+    MEASURE 'Medidas_Ton'[YTD 2023T] = VAR startyear =
+    STARTOFYEAR(Calendario[Data])-365
+VAR enddate =
+    LASTDATE(fConsolidado_Faturamento[DataFaturamento])-365
+RETURN
+    CALCULATE (
+        SUM (fConsolidado_Faturamento[Peso])/1000,
+        DATESBETWEEN (Calendario[Data], startyear, enddate))
+    MEASURE 'Medidas_Ton'[23vs22T] = VAR  Divisao = DIVIDE([Ton2023],[Ton2022])-1
+RETURN
+IF(Divisao = -1, BLANK(), Divisao)
+    MEASURE 'Medidas_Ton'[24vs23T] = VAR  Divisao = DIVIDE([Qt Ton],[YTD 2023T])-1
+RETURN
+IF(Divisao = -1, BLANK(), Divisao)
+    MEASURE 'Medidas_Ton'[YTGT] = ([Qt Ton]/5)*7*(1+'Parâmetro'[Valor Parâmetro])
+    MEASURE 'Medidas_Ton'[MEDIA YTGT] = ([YTGT]/7)*(1+'Parâmetro'[Valor Parâmetro])
+    MEASURE 'Medidas_Ton'[FYvs2023T] = VAR  Divisao = DIVIDE([FYT],[Ton2023])-1
+RETURN
+IF(Divisao = -1, BLANK(), Divisao)
+    MEASURE 'Medidas_Ton'[GAPYTGT] = [FYT]-[Qt Ton]
+    MEASURE 'Medidas_Ton'[M-1ton] = CALCULATE(
+[Qt Ton],
+    DATEADD(Calendario[Data],
+    -1,
+    MONTH
+    ))
+    MEASURE 'Medidas_Ton'[M-LYton] = CALCULATE(
+[Qt Ton],
+    DATEADD(Calendario[Data],
+    -1,
+    YEAR
+    )
+)
+    MEASURE 'Medidas_Ton'[Meta Ton] = CALCULATE(SUM(Meta[Valor]), Meta[TipoMeta] = "Tons")
+    MEASURE 'Medidas_Ton'[% Aderencia.ton] = DIVIDE([Qt Ton], [Meta Ton])
+    MEASURE 'Medidas_Ton'[% M-1ton] = VAR  Divisao = DIVIDE([Qt Ton],[M-1ton])-1
+RETURN
+IF(Divisao = -1, BLANK(), Divisao)
+    MEASURE 'Medidas_Ton'[% M-LYton] = VAR  Divisao = DIVIDE([Qt Ton],[M-LYton])-1
+RETURN
+IF(Divisao = -1, BLANK(), Divisao)
+    MEASURE 'Medidas_Ton'[Fat D-1ton] = VAR vDataContexto = MAX(Calendario[Data])
+VAR vUltimaDataFato = CALCULATE(
+    MAX(fConsolidado_Faturamento[DataFaturamento]), 
+    Calendario[Data] < vDataContexto)
+
+    VAR vValorUltimaData =
+    CALCULATE(
+        [Qt Ton],
+        Calendario[Data] = vUltimaDataFato
+    )
+    RETURN
+    vValorUltimaData
+    MEASURE 'Medidas_Ton'[ENTRADA D-1 TON] = VAR vDataContexto = MAX(Calendario[Data])
+VAR vUltimaDataFato = CALCULATE(
+    MAX(fMonitorPedido[DataImplant]), 
+    Calendario[Data] < vDataContexto)
+
+    VAR vValorUltimaData =
+    CALCULATE(
+        [Cart Ton],
+        Calendario[Data] = vUltimaDataFato
+    )
+    RETURN
+    vValorUltimaData
+    MEASURE 'Medidas_Ton'[TON Cancelado] = VAR varCancelado = [Qt Cancelada]*SUM(dProduto[PesoKG])/1000
+RETURN
+IF(varCancelado = BLANK(), 0, varCancelado)
+    MEASURE 'Medidas_Ton'[DEV Ton] = CALCULATE(SUM(fConsolidado_Faturamento[QtdDevolvida]) * SUM(dProduto[PesoKG])/1000)*-1
+    MEASURE 'Medidas_CurvaABC'[Ranking] = RANKX(ALL(dProduto), [FatR$])
+    MEASURE 'Medidas_CurvaABC'[FaturamentoTT] = CALCULATE([FatR$], 
+       ALL(dProduto)
+)
+    MEASURE 'Medidas_CurvaABC'[FaturamentoAcum.] = VAR vRankikg = [Ranking]
+RETURN
+CALCULATE(
+    [FatR$], 
+    FILTER(
+        ALL(dProduto),
+        [Ranking]<=vRankikg
+        ))
+    MEASURE 'Medidas_CurvaABC'[%Pareto] = DIVIDE([FaturamentoAcum.], [FaturamentoTT])
+    MEASURE 'Medidas_CurvaABC'[80%] = 0.8
+    MEASURE 'Medidas_CurvaABC'[20%] = 0.2
+    MEASURE 'Medidas_CurvaABC'[QtProdutos] = CALCULATE(
+    DISTINCTCOUNT(
+        dProduto[Denominacao]))
+    MEASURE 'Medidas_CurvaABC'[Fat 0.8%] = COUNTROWS(
+    FILTER(VALUES(
+        dProduto[Denominacao]),
+        [ClasseABC] = "A")
+)
+    MEASURE 'Medidas_CurvaABC'[Dif QtdProdutos] = [QtProdutos]-[Fat 0.8%]
+    MEASURE 'Medidas_CurvaABC'[LYRanking] = CALCULATE(
+    [Ranking], SAMEPERIODLASTYEAR(Calendario[Data]))
+    MEASURE 'Medidas_CurvaABC'[FatR$ 0.8%] = CALCULATE(
+    [FatR$],
+    FILTER(
+        ALLSELECTED(dProduto), 
+       [ClasseABC] = "A"))
+    MEASURE 'Medidas_CurvaABC'[ClasseABC] = SWITCH(
+    TRUE(),
+    [%Pareto] >= 0.95, "C",
+    [%Pareto] >= 0.80, "B",
+    "A")
+    MEASURE 'Medidas_CurvaABC'[Mediaperiodo] = MAX(Calendario[Mês])
+    MEASURE 'Medidas_CurvaABC'[%paret02] = VAR varTotalGeralVendas = CALCULATE([FatR$], ALLSELECTED(fConsolidado_Faturamento))
+VAR varTotalatual = [FatR$]
+VAR varTabelaresumo = 
+         SUMMARIZE(
+            ALLSELECTED(fConsolidado_Faturamento), "Total Vendas", [FatR$]
+         )
+VAR TotalAcumulado = 
+         SUMX(
+            FILTER(varTabelaresumo, [Total Vendas] >= varTotalatual), [Total Vendas])
+            RETURN
+            DIVIDE(TotalAcumulado, varTotalGeralVendas)
+    MEASURE 'Medidas_CurvaABC'[TotalSKU.Asa] = CALCULATE(DISTINCTCOUNT(dProduto[Codigo]), dUnidade[Denominacao] = "ASA")
+    MEASURE 'Medidas_CurvaABC'[QtProdutosA] = COUNTROWS(
+    FILTER(VALUES(
+        dProduto[Denominacao]),
+        [ClasseABC] = "A"))
+    MEASURE 'Medidas_CurvaABC'[QtProdutosB] = COUNTROWS(
+    FILTER(VALUES(
+        dProduto[Denominacao]),
+        [ClasseABC] = "B"))
+    MEASURE 'Medidas_CurvaABC'[QtProdutosC] = COUNTROWS(
+    FILTER(VALUES(
+        dProduto[Denominacao]),
+        [ClasseABC] = "C"))
+    MEASURE 'Faixa'[Faix1] = VAR var1 = AVERAGE(Faixa[%])
+RETURN
+IF(var1 = BLANK(), "", var1)
+
+EVALUATE
+    SUMMARIZECOLUMNS(
+        "Fat R$ Display", 'dCanal_de vendas'[Fat R$ Display],
+        "FatR$", 'Medidas_Fat'[FatR$],
+        "LY", 'Medidas_Fat'[LY],
+        "YoY", 'Medidas_Fat'[YoY],
+        "M-LY", 'Medidas_Fat'[M-LY],
+        "M-1", 'Medidas_Fat'[M-1],
+        "Meta R$", 'Medidas_Fat'[Meta R$],
+        "% Aderencia", 'Medidas_Fat'[% Aderencia],
+        "% M-1", 'Medidas_Fat'[% M-1],
+        "% M-LY", 'Medidas_Fat'[% M-LY],
+        "Qt Fat", 'Medidas_Fat'[Qt Fat],
+        "Meta Vol", 'Medidas_Fat'[Meta Vol],
+        "Qt M-LY", 'Medidas_Fat'[Qt M-LY],
+        "Qt M-1", 'Medidas_Fat'[Qt M-1],
+        "%Qt", 'Medidas_Fat'[%Qt],
+        "% M-1 qt", 'Medidas_Fat'[% M-1 qt],
+        "% M-LY qt", 'Medidas_Fat'[% M-LY qt],
+        "Em Aberto M-1 R$", 'Medidas_Fat'[Em Aberto M-1 R$],
+        "Variação Faturamento", 'Medidas_Fat'[Variação Faturamento],
+        "%MoM", 'Medidas_Fat'[%MoM],
+        "Detalhe MoM %", 'Medidas_Fat'[Detalhe MoM %],
+        "%YoY", 'Medidas_Fat'[%YoY],
+        "Detalhe YoY %", 'Medidas_Fat'[Detalhe YoY %],
+        "Em Aberto qt M-1", 'Medidas_Fat'[Em Aberto qt M-1],
+        "Fatmes", 'Medidas_Fat'[Fatmes],
+        "Meta faseamento", 'Medidas_Fat'[Meta faseamento],
+        "Fat faseamento", 'Medidas_Fat'[Fat faseamento],
+        "%Faseamento", 'Medidas_Fat'[%Faseamento],
+        "%Estrategicob", 'Medidas_Fat'[%Estrategicob],
+        "Meta Estrat", 'Medidas_Fat'[Meta Estrat],
+        "FAT D-1", 'Medidas_Fat'[FAT D-1],
+        "Fat Acumulado", 'Medidas_Fat'[Fat Acumulado],
+        "Carteira Aberta", 'Medidas_Cart'[Carteira Aberta],
+        "Entrada Carteira", 'Medidas_Cart'[Entrada Carteira],
+        "Fat+Cart", 'Medidas_Cart'[Fat+Cart],
+        "%Fat+Cart", 'Medidas_Cart'[%Fat+Cart],
+        "Qt Cart", 'Medidas_Cart'[Qt Cart],
+        "Qt Cart+Fat", 'Medidas_Cart'[Qt Cart+Fat],
+        "%Fat+Cartqt", 'Medidas_Cart'[%Fat+Cartqt],
+        "Gap", 'Medidas_Cart'[Gap],
+        "Total Aberto", 'Medidas_Cart'[Total Aberto],
+        "CART %MoM", 'Medidas_Cart'[CART %MoM],
+        "C Detalhe MoM %", 'Medidas_Cart'[C Detalhe MoM %],
+        "Total Abertoqt", 'Medidas_Cart'[Total Abertoqt],
+        "Qt Cancelada", 'Medidas_Cart'[Qt Cancelada],
+        "Qt pedidos abertos", 'Medidas_Cart'[Qt pedidos abertos],
+        "Cart.Aberto Ton", 'Medidas_Cart'[Cart.Aberto Ton],
+        "Cartab.ton M-1", 'Medidas_Cart'[Cartab.ton M-1],
+        "Cart Ton", 'Medidas_Cart'[Cart Ton],
+        "Fat+CartTon", 'Medidas_Cart'[Fat+CartTon],
+        "%Fat+Cartton", 'Medidas_Cart'[%Fat+Cartton],
+        "GapTon", 'Medidas_Cart'[GapTon],
+        "Entrad qtd", 'Medidas_Cart'[Entrad qtd],
+        "RankingCartQt", 'Medidas_Cart'[RankingCartQt],
+        "RankingCartR$", 'Medidas_Cart'[RankingCartR$],
+        "Valor Cancelado", 'Medidas_Cart'[Valor Cancelado],
+        "%Cancelamento", 'Medidas_Cart'[%Cancelamento],
+        "Totalaberto abs", 'Medidas_Cart'[Totalaberto abs],
+        "%Fat+Cartqtest", 'Medidas_Cart'[%Fat+Cartqtest],
+        "Valor CanceladoGrafico", 'Medidas_Cart'[Valor CanceladoGrafico],
+        "D-1", 'Medidas_Cart'[D-1],
+        "ENTRADA D-1", 'Medidas_Cart'[ENTRADA D-1],
+        "DEVOLUÇÃO", 'Medidas_Cart'[DEVOLUÇÃO],
+        "posit2", 'Medidas_Posit'[posit2],
+        "posit2cart", 'Medidas_Posit'[posit2cart],
+        "Meta Posit", 'Medidas_Posit'[Meta Posit],
+        "Asa", 'Medidas_Posit'[Asa],
+        "Hig", 'Medidas_Posit'[Hig],
+        "Pal", 'Medidas_Posit'[Pal],
+        "Vit", 'Medidas_Posit'[Vit],
+        "% Aderencia.posit", 'Medidas_Posit'[% Aderencia.posit],
+        "FAT+CARTPOSIT", 'Medidas_Posit'[FAT+CARTPOSIT],
+        "Gapposit", 'Medidas_Posit'[Gapposit],
+        "Posit travado", 'Medidas_Posit'[Posit travado],
+        "%Posit Estrategico", 'Medidas_Posit'[%Posit Estrategico],
+        "Qt Atingida", 'Medidas_Posit'[Qt Atingida],
+        "Media posit", 'Medidas_Posit'[Media posit],
+        "Fat 2022", 'Medidas_YTG'[Fat 2022],
+        "Fat 2023", 'Medidas_YTG'[Fat 2023],
+        "23vs22", 'Medidas_YTG'[23vs22],
+        "YTD 2023", 'Medidas_YTG'[YTD 2023],
+        "24vs23", 'Medidas_YTG'[24vs23],
+        "YTG", 'Medidas_YTG'[YTG],
+        "MEDIA YTG", 'Medidas_YTG'[MEDIA YTG],
+        "FY", 'Medidas_YTG'[FY],
+        "FYvs2023", 'Medidas_YTG'[FYvs2023],
+        "GAPYTG", 'Medidas_YTG'[GAPYTG],
+        "FYT", 'Medidas_YTG'[FYT],
+        "Faturamento YTD", 'Medidas_YTG'[Faturamento YTD],
+        "24vs23.2", 'Medidas_YTG'[24vs23.2],
+        "YoY-YTD", 'Medidas_YTG'[YoY-YTD],
+        "Valor Parâmetro", 'Parâmetro'[Valor Parâmetro],
+        "Qt Ton", 'Medidas_Ton'[Qt Ton],
+        "Ton2022", 'Medidas_Ton'[Ton2022],
+        "Ton2023", 'Medidas_Ton'[Ton2023],
+        "YTD 2023T", 'Medidas_Ton'[YTD 2023T],
+        "23vs22T", 'Medidas_Ton'[23vs22T],
+        "24vs23T", 'Medidas_Ton'[24vs23T],
+        "YTGT", 'Medidas_Ton'[YTGT],
+        "MEDIA YTGT", 'Medidas_Ton'[MEDIA YTGT],
+        "FYvs2023T", 'Medidas_Ton'[FYvs2023T],
+        "GAPYTGT", 'Medidas_Ton'[GAPYTGT],
+        "M-1ton", 'Medidas_Ton'[M-1ton],
+        "M-LYton", 'Medidas_Ton'[M-LYton],
+        "Meta Ton", 'Medidas_Ton'[Meta Ton],
+        "% Aderencia.ton", 'Medidas_Ton'[% Aderencia.ton],
+        "% M-1ton", 'Medidas_Ton'[% M-1ton],
+        "% M-LYton", 'Medidas_Ton'[% M-LYton],
+        "Fat D-1ton", 'Medidas_Ton'[Fat D-1ton],
+        "ENTRADA D-1 TON", 'Medidas_Ton'[ENTRADA D-1 TON],
+        "TON Cancelado", 'Medidas_Ton'[TON Cancelado],
+        "DEV Ton", 'Medidas_Ton'[DEV Ton],
+        "Ranking", 'Medidas_CurvaABC'[Ranking],
+        "FaturamentoTT", 'Medidas_CurvaABC'[FaturamentoTT],
+        "FaturamentoAcum.", 'Medidas_CurvaABC'[FaturamentoAcum.],
+        "%Pareto", 'Medidas_CurvaABC'[%Pareto],
+        "80%", 'Medidas_CurvaABC'[80%],
+        "20%", 'Medidas_CurvaABC'[20%],
+        "QtProdutos", 'Medidas_CurvaABC'[QtProdutos],
+        "Fat 0.8%", 'Medidas_CurvaABC'[Fat 0.8%],
+        "Dif QtdProdutos", 'Medidas_CurvaABC'[Dif QtdProdutos],
+        "LYRanking", 'Medidas_CurvaABC'[LYRanking],
+        "FatR$ 0.8%", 'Medidas_CurvaABC'[FatR$ 0.8%],
+        "ClasseABC", 'Medidas_CurvaABC'[ClasseABC],
+        "Mediaperiodo", 'Medidas_CurvaABC'[Mediaperiodo],
+        "%paret02", 'Medidas_CurvaABC'[%paret02],
+        "TotalSKU.Asa", 'Medidas_CurvaABC'[TotalSKU.Asa],
+        "QtProdutosA", 'Medidas_CurvaABC'[QtProdutosA],
+        "QtProdutosB", 'Medidas_CurvaABC'[QtProdutosB],
+        "QtProdutosC", 'Medidas_CurvaABC'[QtProdutosC],
+        "Faix1", 'Faixa'[Faix1]
+    )

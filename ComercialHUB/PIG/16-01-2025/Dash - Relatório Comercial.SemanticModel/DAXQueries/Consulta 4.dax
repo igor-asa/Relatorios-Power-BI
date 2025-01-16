@@ -1,0 +1,123 @@
+EVALUATE
+	UNION(
+		ROW(
+			"Table", "dFaixa",
+			"Column", "COORD",
+			"Count", COUNT('dFaixa'[COORD]),
+			"Distinct Values", DISTINCTCOUNTNOBLANK('dFaixa'[COORD]),
+			"Null Count", COUNTROWS('dFaixa') - COUNT('dFaixa'[COORD]),
+			"Min", MIN('dFaixa'[COORD]),
+			"Max", MAX('dFaixa'[COORD]),
+			"Median", MEDIAN('dFaixa'[COORD]),
+			"Mean", AVERAGE('dFaixa'[COORD]),
+			"Standard Deviation", STDEV.P('dFaixa'[COORD]),
+			"Zeros", COALESCE(
+				COUNTROWS(FILTER(
+					'dFaixa',
+					'dFaixa'[COORD] = 0
+				)),
+				0
+			),
+			"Evens", COALESCE(
+				COUNTROWS(FILTER(
+					'dFaixa',
+					MOD(
+						'dFaixa'[COORD],
+						2
+					) = 0
+				)),
+				0
+			),
+			"Odds", COALESCE(
+				COUNTROWS(FILTER(
+					'dFaixa',
+					MOD(
+						'dFaixa'[COORD],
+						2
+					) <> 0
+				)),
+				0
+			),
+			"P25", PERCENTILE.INC(
+				'dFaixa'[COORD],
+				0.25
+			),
+			"P75", PERCENTILE.INC(
+				'dFaixa'[COORD],
+				0.75
+			),
+			"Range in Days", "N/A",
+			"Range in Months", "N/A",
+			"Range in Years", "N/A"
+		),
+		ROW(
+			"Table", "dFaixa",
+			"Column", "FAIXA",
+			"Count", COUNT('dFaixa'[FAIXA]),
+			"Distinct Values", DISTINCTCOUNTNOBLANK('dFaixa'[FAIXA]),
+			"Null Count", COUNTROWS('dFaixa') - COUNT('dFaixa'[FAIXA]),
+			"Min", MIN('dFaixa'[FAIXA]),
+			"Max", MAX('dFaixa'[FAIXA]),
+			"Median", "N/A",
+			"Mean", "N/A",
+			"Standard Deviation", "N/A",
+			"Zeros", "N/A",
+			"Evens", "N/A",
+			"Odds", "N/A",
+			"P25", "N/A",
+			"P75", "N/A",
+			"Range in Days", "N/A",
+			"Range in Months", "N/A",
+			"Range in Years", "N/A"
+		),
+		ROW(
+			"Table", "dFaixa",
+			"Column", "%",
+			"Count", COUNT('dFaixa'[%]),
+			"Distinct Values", DISTINCTCOUNTNOBLANK('dFaixa'[%]),
+			"Null Count", COUNTROWS('dFaixa') - COUNT('dFaixa'[%]),
+			"Min", MIN('dFaixa'[%]),
+			"Max", MAX('dFaixa'[%]),
+			"Median", MEDIAN('dFaixa'[%]),
+			"Mean", AVERAGE('dFaixa'[%]),
+			"Standard Deviation", STDEV.P('dFaixa'[%]),
+			"Zeros", COALESCE(
+				COUNTROWS(FILTER(
+					'dFaixa',
+					'dFaixa'[%] = 0
+				)),
+				0
+			),
+			"Evens", COALESCE(
+				COUNTROWS(FILTER(
+					'dFaixa',
+					MOD(
+						'dFaixa'[%],
+						2
+					) = 0
+				)),
+				0
+			),
+			"Odds", COALESCE(
+				COUNTROWS(FILTER(
+					'dFaixa',
+					MOD(
+						'dFaixa'[%],
+						2
+					) <> 0
+				)),
+				0
+			),
+			"P25", PERCENTILE.INC(
+				'dFaixa'[%],
+				0.25
+			),
+			"P75", PERCENTILE.INC(
+				'dFaixa'[%],
+				0.75
+			),
+			"Range in Days", "N/A",
+			"Range in Months", "N/A",
+			"Range in Years", "N/A"
+		)
+	)

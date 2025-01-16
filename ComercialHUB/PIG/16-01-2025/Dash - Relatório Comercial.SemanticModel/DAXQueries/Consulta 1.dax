@@ -1,0 +1,23 @@
+DEFINE
+
+VAR Faturamento = ADDCOLUMNS( SUMMARIZE(Consolidado_Faturamento,Consolidado_Faturamento[vendedorID] , Consolidado_Faturamento[emitenteID], Consolidado_Faturamento[DataFaturamento])
+				, "Fatliq", [Qt Fat])
+
+
+
+
+VAR Pedidos = ADDCOLUMNS( SUMMARIZE(fMonitorPedido,dVendedores[VendedorId],dClientes[Emitenteid],fMonitorPedido[DataImplant] ) ,"Qtd Liq Aberta",[Qt Cart])
+
+
+var agrup = NATURALLEFTOUTERJOIN(SELECTCOLUMNS(Pedidos,"VendedorId",[VendedorId] + 0,"EmitenteId" , [Emitenteid] + 0 ,"ano-mes" , FORMAT([DataImplant],"yy-MM") & "",[Qtd Liq Aberta]) , SELECTCOLUMNS(Faturamento,"VendedorId",[VendedorId] + 0,"EmitenteId" , [Emitenteid] + 0 ,"ano-mes" ,FORMAT([DataFaturamento],"yy-MM") & "",[Fatliq]))
+
+var agrup2 = NATURALLEFTOUTERJOIN( SELECTCOLUMNS(Faturamento,"VendedorId",[VendedorId] + 0,"EmitenteId" , [Emitenteid] + 0 ,"ano-mes" ,FORMAT([DataFaturamento],"yy-MM") & "",[Fatliq])
+ , SELECTCOLUMNS(Pedidos,"VendedorId",[VendedorId] + 0,"EmitenteId" , [Emitenteid] + 0 ,"ano-mes" , FORMAT([DataImplant],"yy-MM") & "",[Qtd Liq Aberta]))
+
+
+
+
+
+var tab2 =  GROUPBY(agrup,[VendedorId],[EmitenteId],[ano-mes],"Fatliq",SUMX(CURRENTGROUP(),[Fatliq]) , "Qtd Liq Aberta" , SUMX(CURRENTGROUP(),[Qtd Liq Aberta] ))
+
+

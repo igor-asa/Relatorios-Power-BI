@@ -1,0 +1,9 @@
+{
+  "version": "4.0",
+  "datasetReference": {
+    "byPath": {
+      "path": "../Dash - Relatório Comercial.SemanticModel"
+    },
+    "byConnection": null
+  }
+}
