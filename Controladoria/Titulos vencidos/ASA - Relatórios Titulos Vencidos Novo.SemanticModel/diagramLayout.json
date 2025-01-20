@@ -1,0 +1,292 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 716.2662486276779,
+        "y": 2712.7879180308114
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 1826.6120336728845,
+            "y": 2030.8334115391756
+          },
+          "nodeIndex": "Emitente",
+          "nodeLineageTag": "3a9bdaf3-728a-42ae-b63b-41b8e0f99edd",
+          "size": {
+            "height": 293.6767261848089,
+            "width": 234
+          },
+          "zIndex": 18
+        },
+        {
+          "location": {
+            "x": 802.93348133527013,
+            "y": 3087.0121114621115
+          },
+          "nodeIndex": "EmpresaCobranca",
+          "nodeLineageTag": "7c048fba-d41f-491c-b3f6-b06a05365837",
+          "size": {
+            "height": 242.96982144557342,
+            "width": 234
+          },
+          "zIndex": 19
+        },
+        {
+          "location": {
+            "x": 1079.0293890662811,
+            "y": 2127.0964855695156
+          },
+          "nodeIndex": "EmpresasAsa",
+          "nodeLineageTag": "8631281f-8484-441a-8bea-0262e015b9a9",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 14
+        },
+        {
+          "location": {
+            "x": 2189.7974404025153,
+            "y": 2761.6512331728045
+          },
+          "nodeIndex": "Estabelecimento",
+          "nodeLineageTag": "e3315f71-0511-4fe1-bd2a-03b9b0fd9f41",
+          "size": {
+            "height": 187.0657291765844,
+            "width": 234
+          },
+          "zIndex": 15
+        },
+        {
+          "location": {
+            "x": 2446.9235266879532,
+            "y": 3025.6479149570323
+          },
+          "nodeIndex": "Feriado",
+          "nodeLineageTag": "90a6d962-ec08-4f2c-a844-61d395167748",
+          "size": {
+            "height": 191.80818453797792,
+            "width": 234
+          },
+          "zIndex": 16
+        },
+        {
+          "location": {
+            "x": 1771.8529003193059,
+            "y": 2756.2622301810288
+          },
+          "nodeIndex": "StatusCobranca",
+          "nodeLineageTag": "9ad61eee-6f43-4ced-b549-95ed833b05d1",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 17
+        },
+        {
+          "location": {
+            "x": 411.66830394008724,
+            "y": 2312.453725662529
+          },
+          "nodeIndex": "Coordenador",
+          "nodeLineageTag": "c5880508-a2c7-43b6-8fca-330c7856679e",
+          "size": {
+            "height": 207.90409226898885,
+            "width": 234
+          },
+          "zIndex": 5
+        },
+        {
+          "location": {
+            "x": 463.17980696274719,
+            "y": 1972.8228247277164
+          },
+          "nodeIndex": "Gerente",
+          "nodeLineageTag": "2a37259f-63d7-4732-8476-e8312de551ac",
+          "size": {
+            "height": 193.38900299177544,
+            "width": 234
+          },
+          "zIndex": 6
+        },
+        {
+          "location": {
+            "x": 1395.7924075735825,
+            "y": 2290.4257656713753
+          },
+          "nodeIndex": "TituloVencido",
+          "size": {
+            "height": 559.25422642283468,
+            "width": 234
+          },
+          "zIndex": 7
+        },
+        {
+          "location": {
+            "x": 1386.7171349264643,
+            "y": 2950.539943913951
+          },
+          "nodeIndex": "TituloVencidoStatus",
+          "nodeLineageTag": "d1dc00f7-5640-4f17-9f73-ff47b0b66a90",
+          "size": {
+            "height": 293.61892178288349,
+            "width": 237.16163690759549
+          },
+          "zIndex": 8
+        },
+        {
+          "location": {
+            "x": 794.22636975914816,
+            "y": 2382.7895609977941
+          },
+          "nodeIndex": "Vendedor",
+          "nodeLineageTag": "29eec35a-9a43-4d5d-b099-10a7d54f6551",
+          "size": {
+            "height": 204.74245536139335,
+            "width": 234
+          },
+          "zIndex": 9
+        },
+        {
+          "location": {
+            "x": 1501.0467696332871,
+            "y": 1893.7819020378276
+          },
+          "nodeIndex": "Regional",
+          "nodeLineageTag": "90be14cd-0adf-410c-91e5-20d6c1126a4c",
+          "size": {
+            "height": 185.48491072278665,
+            "width": 234
+          },
+          "zIndex": 10
+        },
+        {
+          "location": {
+            "x": 2154.7814739535083,
+            "y": 2169.4044431431366
+          },
+          "nodeIndex": "Representante",
+          "nodeLineageTag": "7dc7bd91-57b1-4963-9ffc-fafbe8f817f1",
+          "size": {
+            "height": 230.03555062215776,
+            "width": 234
+          },
+          "zIndex": 11
+        },
+        {
+          "location": {
+            "x": 1975.2311712363073,
+            "y": 3026.8806531089431
+          },
+          "nodeIndex": "Calendario",
+          "size": {
+            "height": 353.7478274291243,
+            "width": 234
+          },
+          "zIndex": 12
+        },
+        {
+          "location": {
+            "x": 900.16642632406774,
+            "y": 2791.07764326666
+          },
+          "nodeIndex": "TituloVencidoAging",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 21
+        },
+        {
+          "location": {
+            "x": 3010.1419586288939,
+            "y": 1975.4621374865544
+          },
+          "nodeIndex": "Medidas",
+          "nodeLineageTag": "900e0311-6a74-4c59-b22d-53fa356b784f",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 20
+        },
+        {
+          "location": {
+            "x": 2450.382705272224,
+            "y": 2292.7988696790362
+          },
+          "nodeIndex": "GrupoCalculos",
+          "nodeLineageTag": "1180b8ec-3d38-4148-8d27-1e22111b50ed",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 13
+        },
+        {
+          "location": {
+            "x": 3016.4210830739034,
+            "y": 2203.0902695106647
+          },
+          "nodeIndex": "ComparativoMesAnterior",
+          "nodeLineageTag": "defea6bf-6d7d-40a2-b94e-587b03eaaf69",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 3019.3079939091117,
+            "y": 2425.7678008960893
+          },
+          "nodeIndex": "ContasAReceber",
+          "nodeLineageTag": "efc38962-df89-495a-ab20-91221ac8586e",
+          "size": {
+            "height": 229.60943153775816,
+            "width": 231.18005413926085
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 3015.7173078415353,
+            "y": 2682.5053971964135
+          },
+          "nodeIndex": "AgingKeyAccount",
+          "nodeLineageTag": "9c4b8bc8-bc19-4a1c-a72a-7c76653359e2",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 3019.9472266326438,
+            "y": 2920.1223330038711
+          },
+          "nodeIndex": "DevolucaoTop10",
+          "nodeLineageTag": "df6a7d6e-abf1-4bd5-8259-b9800d8c7368",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 2
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 70.923347424689737,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

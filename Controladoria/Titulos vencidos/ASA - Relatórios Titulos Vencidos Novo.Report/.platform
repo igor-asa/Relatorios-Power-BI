@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "ASA - Relatórios Titulos Vencidos Novo"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "3f439099-5ede-47f9-85fc-3ff4ab274d0c"
+  }
+}
